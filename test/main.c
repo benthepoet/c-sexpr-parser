@@ -22,14 +22,14 @@ int main(int argc, char *argv[]) {
 void print_node(struct SNode *node) {
   struct SNode *current = node;
   while (current != NULL) {
-  	if (current->type == LIST) {
-	  printf("LIST\n");
-  	  print_node(current->list);
-	} else if (current->type == STRING) {
-	  printf("STRING: %s\n", current->string);
-	} else if (current->type == SYMBOL) {
-	  printf("SYMBOL: %s\n", current->symbol);
-	}
-	current = current->next;
+    if (current->type == LIST) {
+      printf("LIST\n");
+      print_node(current->list);
+    } else if (current->type == STRING) {
+      printf("STRING: %s\n", current->string);
+    } else if (current->type == SYMBOL) {
+      printf("SYMBOL: %s\n", current->symbol);
+    }
+    current = current->next;
   }
 }

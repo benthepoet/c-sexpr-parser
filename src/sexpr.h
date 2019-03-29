@@ -10,7 +10,7 @@ struct SNode {
 
   union {
     struct SNode *list;
-	char *string;
+    char *string;
     char *symbol;
   };
 };

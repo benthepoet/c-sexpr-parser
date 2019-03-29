@@ -11,17 +11,15 @@ void snode_free(struct SNode *node) {
   while (node != NULL) {
     tmp = node;
 
-	if (node->type == STRING) {
-	  free(node->string);
-	  node->string = NULL;
-	}
-
-    if (node->type == SYMBOL) {
+    if (node->type == STRING) {
+      free(node->string);
+      node->string = NULL;
+    }
+    else if (node->type == SYMBOL) {
       free(node->symbol);
       node->symbol = NULL;
     }
-
-    if (node->type == LIST) {
+    else if (node->type == LIST) {
       snode_free(node->list);
     }
 
@@ -57,15 +55,15 @@ struct SNode *parse_sexpr_file(FILE *fp) {
       node->next = NULL;
 
       if (c == '"') {
-		node->type = STRING;
+        node->type = STRING;
         fscanf(fp, "\"%31[^\"]\"", buffer);
-		node->string = malloc(strlen(buffer) + 1);
-		strcpy(node->string, buffer);
+        node->string = malloc(strlen(buffer) + 1);
+        strcpy(node->string, buffer);
       } else {
-		node->type = SYMBOL;
+        node->type = SYMBOL;
         fscanf(fp, "%31[^() \t\n\v\f\r]", buffer);
-		node->symbol = malloc(strlen(buffer) + 1);
-      	strcpy(node->symbol, buffer);
+        node->symbol = malloc(strlen(buffer) + 1);
+        strcpy(node->symbol, buffer);
       }
     }
 
