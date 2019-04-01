@@ -56,13 +56,13 @@ struct SNode *parse_sexpr_file(FILE *fp) {
 
       if (c == '"') {
         node->type = STRING;
-        if (fscanf(fp, "\"%31[^\"]\"", buffer)) {
+        if (fscanf(fp, "\"%511[^\"]\"", buffer)) {
           node->string = malloc(strlen(buffer) + 1);
           strcpy(node->string, buffer);
         }
       } else {
         node->type = SYMBOL;
-        if (fscanf(fp, "%31[^() \t\n\v\f\r]", buffer)) {
+        if (fscanf(fp, "%511[^() \t\n\v\f\r]", buffer)) {
           node->symbol = malloc(strlen(buffer) + 1);
           strcpy(node->symbol, buffer);
         }
