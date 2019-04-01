@@ -34,7 +34,6 @@ struct SNode *parse_sexpr_file(FILE *fp) {
   struct SNode *tail, *head = NULL;
 
   int c;
-  char buffer[512];
 
   while ((c = fgetc(fp)) != EOF) {
     struct SNode *node = NULL;
@@ -51,6 +50,8 @@ struct SNode *parse_sexpr_file(FILE *fp) {
     else if (!isspace(c)) {
       ungetc(c, fp);
 
+      char buffer[512];
+      
       node = malloc(sizeof(struct SNode));
       node->next = NULL;
 
