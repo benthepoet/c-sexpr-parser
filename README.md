@@ -4,9 +4,9 @@ I wanted to be able to store configurations as s-expressions over JSON or XML.
 When run the parser generates a binary tree in memory that represents the s-expression.
 
 The supported datatypes are as follows.
-* LIST: `(1 2 3)`
-* STRING: `"ABC"`
-* SYMBOL: `abc-def` `:key`
+* LIST: `(a b c)`
+* STRING: `"abc"`
+* SYMBOL: `abc` `abc-def`
 * INTEGER: `-123` `456`
 * FLOAT: `-0.123` `4.567` 
 
@@ -21,4 +21,4 @@ make
 
 ## Known Issues
 * The parser is not capable of reading escaped characters in strings. I have no plans to address to this as my use case does not require this feature.
-* The parser doesn't know how to handle empty strings. 
+

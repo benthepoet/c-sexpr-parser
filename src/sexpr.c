@@ -5,8 +5,7 @@
 
 #include "sexpr.h"
 
-int is_float(char *str);
-int is_integer(char *str);
+#define BUFFER_SIZE 512
 
 int is_float(char *str) {
   char *ptr = NULL;
@@ -18,6 +17,10 @@ int is_integer(char *str) {
   char *ptr = NULL;
   strtol(str, &ptr, 0);
   return !*ptr;
+}
+
+int is_terminator(char c) {
+  return isspace(c) || c == '(' || c == ')';
 }
 
 struct SNode *parse_sexpr_file(FILE *fp) {
@@ -34,31 +37,39 @@ struct SNode *parse_sexpr_file(FILE *fp) {
       node->type = LIST;
       node->list = parse_sexpr_file(fp);
     } else if (c == '"') {
-      ungetc(c, fp);
-      
-      char buffer[512];
-      if (fscanf(fp, "\"%511[^\"]\"", buffer)) {
-        node = calloc(1, sizeof(struct SNode));
-        node->type = STRING;
-        node->value = calloc(strlen(buffer) + 1, sizeof(char));
-        strcpy(node->value, buffer);
+      int length = 0;
+      char buffer[BUFFER_SIZE];
+
+      while ((c = fgetc(fp)) != '"' && length < BUFFER_SIZE - 1) {
+        buffer[length] = c;
+        length++;
       }
+      buffer[length] = '\0';
+
+      node = calloc(1, sizeof(struct SNode));
+      node->type = STRING;
+      node->value = calloc(length + 1, sizeof(char));
+      strcpy(node->value, buffer);
     } else if (!isspace(c)) {
-      ungetc(c, fp);
-      
-      char buffer[32];
-      if (fscanf(fp, "%31[^()\t\n\v\f\r ]", buffer)) {
-        node = calloc(1, sizeof(struct SNode));
-        node->value = calloc(strlen(buffer) + 1, sizeof(char));
-        strcpy(node->value, buffer);
-        
-        if (is_float(node->value)) {
-          node->type = FLOAT;
-        } else if (is_integer(node->value)) {
-          node->type = INTEGER;
-        } else {
-          node->type = SYMBOL;
-        }
+      int length = 1;
+      char buffer[BUFFER_SIZE] = { c };
+
+      while (!is_terminator(c = fgetc(fp)) && length < BUFFER_SIZE - 1) {
+        buffer[length] = c;
+        length++;
+      }
+      buffer[length] = '\0';
+
+      node = calloc(1, sizeof(struct SNode));
+      node->value = calloc(length + 1, sizeof(char));
+      strcpy(node->value, buffer);
+
+      if (is_float(node->value)) {
+        node->type = FLOAT;
+      } else if (is_integer(node->value)) {
+        node->type = INTEGER;
+      } else {
+        node->type = SYMBOL;
       }
     }
 
