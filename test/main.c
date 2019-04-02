@@ -5,10 +5,14 @@
 void print_node(struct SNode *node);
 
 int main(int argc, char *argv[]) {
+  // Open the file stream
   FILE *fp = fopen("test/data.lisp", "r");
 
   // Read the file into a tree
   struct SNode *node = parse_sexpr_file(fp);
+
+  // Close the file stream
+  fclose(fp);
 
   // Walk the tree and print the nodes
   print_node(node);

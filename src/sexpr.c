@@ -32,7 +32,6 @@ void snode_free(struct SNode *node) {
 
 struct SNode *parse_sexpr_file(FILE *fp) {
   struct SNode *tail, *head = NULL;
-
   int c;
 
   while ((c = fgetc(fp)) != EOF) {
@@ -51,20 +50,19 @@ struct SNode *parse_sexpr_file(FILE *fp) {
       ungetc(c, fp);
 
       char buffer[512];
-      
-      node = malloc(sizeof(struct SNode));
-      node->next = NULL;
 
       if (c == '"') {
-        node->type = STRING;
         if (fscanf(fp, "\"%511[^\"]\"", buffer)) {
-          node->string = malloc(strlen(buffer) + 1);
+          node = calloc(1, sizeof(struct SNode));
+          node->type = STRING;
+          node->string = calloc(strlen(buffer) + 1, sizeof(char));
           strcpy(node->string, buffer);
         }
       } else {
-        node->type = SYMBOL;
-        if (fscanf(fp, "%511[^() \t\n\v\f\r]", buffer)) {
-          node->symbol = malloc(strlen(buffer) + 1);
+        if (fscanf(fp, "%511[^()\t\n\v\f\r ]", buffer)) {
+          node = calloc(1, sizeof(struct SNode));
+          node->type = SYMBOL;
+          node->symbol = calloc(strlen(buffer) + 1, sizeof(char));
           strcpy(node->symbol, buffer);
         }
       }
