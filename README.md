@@ -7,7 +7,7 @@ The supported datatypes are as follows.
 * STRING: `"ABC"`
 * SYMBOL: `abc-def` `:key`
 * INTEGER: `-123` `456`
-* FLOAT: `-0.123` '4.567` 
+* FLOAT: `-0.123` `4.567` 
 
 ## Getting started
 To run the example application, which reads an s-expression from a file and then prints out the contents, run the following.
