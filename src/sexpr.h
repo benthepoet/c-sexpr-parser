@@ -7,9 +7,8 @@ enum SNodeType {
 };
 
 struct SNode {
-  enum SNodeType type;
   struct SNode *next;
-
+  enum SNodeType type;
   union {
     struct SNode *list;
     char *value;
