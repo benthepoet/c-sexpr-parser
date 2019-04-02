@@ -23,6 +23,7 @@ int is_terminator(char c) {
   return isspace(c) || c == '(' || c == ')';
 }
 
+// Recursively parse an s-expression from a file stream
 struct SNode *parse_sexpr_file(FILE *fp) {
   struct SNode *tail, *head = NULL;
   int c;
@@ -31,8 +32,10 @@ struct SNode *parse_sexpr_file(FILE *fp) {
     struct SNode *node = NULL;
 
     if (c == ')') {
+      // Terminate list recursion
       break;
     } else if (c == '(') {
+      // Begin list recursion
       node = calloc(1, sizeof(struct SNode));
       node->type = LIST;
       node->list = parse_sexpr_file(fp);
@@ -40,6 +43,7 @@ struct SNode *parse_sexpr_file(FILE *fp) {
       int length = 0;
       char buffer[BUFFER_SIZE];
 
+      // Read until string terminator
       while ((c = fgetc(fp)) != '"' && length < BUFFER_SIZE - 1) {
         buffer[length] = c;
         length++;
@@ -54,6 +58,7 @@ struct SNode *parse_sexpr_file(FILE *fp) {
       int length = 1;
       char buffer[BUFFER_SIZE] = { c };
 
+      // Read until whitespace or list terminator
       while (!is_terminator(c = fgetc(fp)) && length < BUFFER_SIZE - 1) {
         buffer[length] = c;
         length++;
@@ -85,6 +90,7 @@ struct SNode *parse_sexpr_file(FILE *fp) {
   return head;
 }
 
+// Recursively free memory allocated by a node
 void snode_free(struct SNode *node) {
   struct SNode *tmp;
 
@@ -94,12 +100,14 @@ void snode_free(struct SNode *node) {
     if (node->type == LIST) {
       snode_free(node->list);
     } else {
+      // Free current value
       free(node->value);
       node->value = NULL;
     }
 
     node = node->next;
 
+    // Free current node
     free(tmp);
     tmp = NULL;
   }
