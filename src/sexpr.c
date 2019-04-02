@@ -29,37 +29,35 @@ struct SNode *parse_sexpr_file(FILE *fp) {
 
     if (c == ')') {
       break;
-    }
-    else if (c == '(') {
+    } else if (c == '(') {
       node = calloc(1, sizeof(struct SNode));
       node->type = LIST;
       node->list = parse_sexpr_file(fp);
-    }
-    else if (!isspace(c)) {
+    } else if (c == '"') {
       ungetc(c, fp);
-
+      
       char buffer[512];
-
-      if (c == '"') {
-        if (fscanf(fp, "\"%511[^\"]\"", buffer)) {
-          node = calloc(1, sizeof(struct SNode));
-          node->type = STRING;
-          node->value = calloc(strlen(buffer) + 1, sizeof(char));
-          strcpy(node->value, buffer);
-        }
-      } else {
-        if (fscanf(fp, "%511[^()\t\n\v\f\r ]", buffer)) {
-          node = calloc(1, sizeof(struct SNode));
-          node->value = calloc(strlen(buffer) + 1, sizeof(char));
-          strcpy(node->value, buffer);
-          
-          if (is_float(node->value)) {
-            node->type = FLOAT;
-          } else if (is_integer(node->value)) {
-            node->type = INTEGER;
-          } else {
-            node->type = SYMBOL;
-          }
+      if (fscanf(fp, "\"%511[^\"]\"", buffer)) {
+        node = calloc(1, sizeof(struct SNode));
+        node->type = STRING;
+        node->value = calloc(strlen(buffer) + 1, sizeof(char));
+        strcpy(node->value, buffer);
+      }
+    } else if (!isspace(c)) {
+      ungetc(c, fp);
+      
+      char buffer[32];
+      if (fscanf(fp, "%31[^()\t\n\v\f\r ]", buffer)) {
+        node = calloc(1, sizeof(struct SNode));
+        node->value = calloc(strlen(buffer) + 1, sizeof(char));
+        strcpy(node->value, buffer);
+        
+        if (is_float(node->value)) {
+          node->type = FLOAT;
+        } else if (is_integer(node->value)) {
+          node->type = INTEGER;
+        } else {
+          node->type = SYMBOL;
         }
       }
     }
