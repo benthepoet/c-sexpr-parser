@@ -25,6 +25,8 @@ int is_terminator(char c) {
 
 // Recursively parse an s-expression from a file stream
 struct SNode *parse_sexpr_file(FILE *fp) {
+  // Using a linked list, nodes are appended to the list tail until we 
+  // reach a list terminator at which point we return the list head.
   struct SNode *tail, *head = NULL;
   int c;
 
@@ -80,8 +82,10 @@ struct SNode *parse_sexpr_file(FILE *fp) {
 
     if (node != NULL) {
       if (head == NULL) {
+        // Initialize the list head
         head = tail = node;
       } else {
+        // Append the node to the list tail
         tail = tail->next = node;
       }
     }
