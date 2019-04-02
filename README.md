@@ -19,6 +19,6 @@ make
 ./bin/main
 ```
 
-## Known Issues
+## Known Issues and Limitations
 * The parser is not capable of reading escaped characters in strings. I have no plans to address to this as my use case does not require this feature.
-
+* The parser has a 511 character limit on symbols, integers, floats, and strings. This can be increased by changing the `BUFFER_SIZE` macro.
