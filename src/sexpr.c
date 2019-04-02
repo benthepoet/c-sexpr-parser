@@ -41,8 +41,7 @@ struct SNode *parse_sexpr_file(FILE *fp) {
       break;
     }
     else if (c == '(') {
-      node = malloc(sizeof(struct SNode));
-      node->next = NULL;
+      node = calloc(1, sizeof(struct SNode));
       node->type = LIST;
       node->list = parse_sexpr_file(fp);
     }
