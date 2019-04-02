@@ -5,29 +5,19 @@
 
 #include "sexpr.h"
 
-void snode_free(struct SNode *node) {
-  struct SNode *tmp;
+int is_float(char *str);
+int is_integer(char *str);
 
-  while (node != NULL) {
-    tmp = node;
+int is_float(char *str) {
+  char *ptr = NULL;
+  strtod(str, &ptr);
+  return !*ptr;
+}
 
-    if (node->type == STRING) {
-      free(node->string);
-      node->string = NULL;
-    }
-    else if (node->type == SYMBOL) {
-      free(node->symbol);
-      node->symbol = NULL;
-    }
-    else if (node->type == LIST) {
-      snode_free(node->list);
-    }
-
-    node = node->next;
-
-    free(tmp);
-    tmp = NULL;
-  }
+int is_integer(char *str) {
+  char *ptr = NULL;
+  strtol(str, &ptr, 0);
+  return !*ptr;
 }
 
 struct SNode *parse_sexpr_file(FILE *fp) {
@@ -54,15 +44,22 @@ struct SNode *parse_sexpr_file(FILE *fp) {
         if (fscanf(fp, "\"%511[^\"]\"", buffer)) {
           node = calloc(1, sizeof(struct SNode));
           node->type = STRING;
-          node->string = calloc(strlen(buffer) + 1, sizeof(char));
-          strcpy(node->string, buffer);
+          node->value = calloc(strlen(buffer) + 1, sizeof(char));
+          strcpy(node->value, buffer);
         }
       } else {
         if (fscanf(fp, "%511[^()\t\n\v\f\r ]", buffer)) {
           node = calloc(1, sizeof(struct SNode));
-          node->type = SYMBOL;
-          node->symbol = calloc(strlen(buffer) + 1, sizeof(char));
-          strcpy(node->symbol, buffer);
+          node->value = calloc(strlen(buffer) + 1, sizeof(char));
+          strcpy(node->value, buffer);
+          
+          if (is_float(node->value)) {
+            node->type = FLOAT;
+          } else if (is_integer(node->value)) {
+            node->type = INTEGER;
+          } else {
+            node->type = SYMBOL;
+          }
         }
       }
     }
@@ -77,4 +74,24 @@ struct SNode *parse_sexpr_file(FILE *fp) {
   }
 
   return head;
+}
+
+void snode_free(struct SNode *node) {
+  struct SNode *tmp;
+
+  while (node != NULL) {
+    tmp = node;
+
+    if (node->type == LIST) {
+      snode_free(node->list);
+    } else {
+      free(node->value);
+      node->value = NULL;
+    }
+
+    node = node->next;
+
+    free(tmp);
+    tmp = NULL;
+  }
 }

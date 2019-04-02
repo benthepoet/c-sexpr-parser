@@ -30,10 +30,15 @@ void print_node(struct SNode *node) {
       printf("LIST\n");
       print_node(current->list);
     } else if (current->type == STRING) {
-      printf("STRING: %s\n", current->string);
+      printf("STRING: %s\n", current->value);
     } else if (current->type == SYMBOL) {
-      printf("SYMBOL: %s\n", current->symbol);
+      printf("SYMBOL: %s\n", current->value);
+    } else if (current->type == INTEGER) {
+      printf("INTEGER: %s\n", current->value);
+    } else if (current->type == FLOAT) {
+      printf("FLOAT: %s\n", current->value);
     }
+    
     current = current->next;
   }
 }
