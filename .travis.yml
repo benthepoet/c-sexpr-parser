@@ -2,4 +2,4 @@ language: c
 
 compiler: gcc
 
-script: mkdir bin && make
+script: mkdir bin && make && ./bin/main

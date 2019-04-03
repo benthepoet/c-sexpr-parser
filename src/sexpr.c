@@ -71,10 +71,10 @@ struct SNode *parse_sexpr_file(FILE *fp) {
       node->value = calloc(length + 1, sizeof(char));
       strcpy(node->value, buffer);
 
-      if (is_float(node->value)) {
-        node->type = FLOAT;
-      } else if (is_integer(node->value)) {
+      if (is_integer(node->value)) {
         node->type = INTEGER;
+      } else if (is_float(node->value)) {
+        node->type = FLOAT;
       } else {
         node->type = SYMBOL;
       }

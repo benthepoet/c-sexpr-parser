@@ -1,2 +1,2 @@
-(:numbers (-123 4 567 -0.123 4.567)
- :person (:name "Ben Hanna" "" test-key ((1) (2) (3))))
+(a abc-def "" "def-hij"
+	(-123 123 -1.234 1.234))

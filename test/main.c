@@ -1,8 +1,10 @@
+#include <assert.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "../src/sexpr.h"
 
-void print_node(struct SNode *node);
+void run_tests(struct SNode *node);
 
 int main(int argc, char *argv[]) {
   // Open the file stream
@@ -14,8 +16,8 @@ int main(int argc, char *argv[]) {
   // Close the file stream
   fclose(fp);
 
-  // Walk the tree and print the nodes
-  print_node(node);
+  // Walk the tree and verify data
+  run_tests(node);
 
   // Deallocate the memory used by the tree
   snode_free(node);
@@ -23,22 +25,52 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-void print_node(struct SNode *node) {
-  struct SNode *current = node;
-  while (current != NULL) {
-    if (current->type == LIST) {
-      printf("LIST\n");
-      print_node(current->list);
-    } else if (current->type == STRING) {
-      printf("STRING: %s\n", current->value);
-    } else if (current->type == SYMBOL) {
-      printf("SYMBOL: %s\n", current->value);
-    } else if (current->type == INTEGER) {
-      printf("INTEGER: %s\n", current->value);
-    } else if (current->type == FLOAT) {
-      printf("FLOAT: %s\n", current->value);
-    }
-    
-    current = current->next;
-  }
+void run_tests(struct SNode *node) {
+  printf("List - Root\n");
+  assert(node != NULL);
+  assert(node->type == LIST);
+  
+  printf("Symbol - Single-character\n");
+  struct SNode *current = node->list;
+  assert(current->type == SYMBOL);
+  assert(!strcmp(current->value, "a"));
+
+  printf("Symbol - Multi-character\n");
+  current = current->next;
+  assert(current->type == SYMBOL);
+  assert(!strcmp(current->value, "abc-def"));
+  
+  printf("String - Empty\n");
+  current = current->next;
+  assert(current->type == STRING);
+  assert(!strcmp(current->value, ""));
+  
+  printf("String - Multi-character\n");
+  current = current->next;
+  assert(current->type == STRING);
+  assert(!strcmp(current->value, "def-hij"));
+  
+  printf("List - Child\n");
+  current = current->next;
+  assert(current->type == LIST);
+  
+  printf("Integer - Negative\n");
+  current = current->list;
+  assert(current->type == INTEGER);
+  assert(!strcmp(current->value, "-123"));
+  
+  printf("Integer - Positive\n");
+  current = current->next;
+  assert(current->type == INTEGER);
+  assert(!strcmp(current->value, "123"));
+  
+  printf("Float - Negative\n");
+  current = current->next;
+  assert(current->type == FLOAT);
+  assert(!strcmp(current->value, "-1.234"));
+  
+  printf("Float - Positive\n");
+  current = current->next;
+  assert(current->type == FLOAT);
+  assert(!strcmp(current->value, "1.234"));
 }

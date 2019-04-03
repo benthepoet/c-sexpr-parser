@@ -14,7 +14,7 @@ The supported datatypes are as follows.
 * FLOAT: `-0.123` `4.567` 
 
 ## Getting Started
-To run the example application, which reads an s-expression from a file and then prints out the contents, run the following.
+To run the example application, which reads an s-expression from a file and then verifies the data run the following.
 
 ```bash
 mkdir bin
