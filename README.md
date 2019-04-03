@@ -1,6 +1,6 @@
 # Parsing S-expressions in C
 
-[![Build Status](https://travis-ci.org/benthepoet/c-sexpr-parser.svg?branch=master)](https://travis-ci.org/benthepoet/c-sexpr-parser)
+[![Build Status](https://travis-ci.com/benthepoet/c-sexpr-parser.svg?branch=master)](https://travis-ci.com/benthepoet/c-sexpr-parser)
 
 This project is an s-expression parser written in C. I wrote this parser because 
 I wanted to be able to store configurations as s-expressions over JSON or XML. 
