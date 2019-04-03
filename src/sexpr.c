@@ -15,7 +15,7 @@ int is_float(char *str) {
 
 int is_integer(char *str) {
   char *ptr = NULL;
-  strtol(str, &ptr, 0);
+  strtol(str, &ptr, 10);
   return !*ptr;
 }
 
