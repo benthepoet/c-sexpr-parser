@@ -96,10 +96,8 @@ struct SNode *parse_sexpr_file(FILE *fp) {
 
 // Recursively free memory allocated by a node
 void snode_free(struct SNode *node) {
-  struct SNode *tmp;
-
   while (node != NULL) {
-    tmp = node;
+    struct SNode *tmp = node;
 
     if (node->type == LIST) {
       snode_free(node->list);
