@@ -7,11 +7,15 @@
 void run_tests(struct SNode *node);
 
 int main(int argc, char *argv[]) {
+  // Unused parameters
+  (void)argc;
+  (void)argv;
+  
   // Open the file stream
   FILE *fp = fopen("test/data.lisp", "r");
 
   // Read the file into a tree
-  struct SNode *node = parse_sexpr_file(fp);
+  struct SNode *node = snode_parse(fp);
 
   // Close the file stream
   fclose(fp);

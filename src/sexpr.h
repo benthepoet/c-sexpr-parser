@@ -15,5 +15,5 @@ struct SNode {
   };
 };
 
-struct SNode *parse_sexpr_file(FILE *fp);
+struct SNode *snode_parse(FILE *fp);
 void snode_free(struct SNode *node);

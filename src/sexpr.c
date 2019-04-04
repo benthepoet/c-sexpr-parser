@@ -19,12 +19,31 @@ inline int is_integer(char *str) {
   return !*ptr;
 }
 
-inline int is_terminator(char c) {
+int is_lst_term(char c) {
   return isspace(c) || c == '(' || c == ')';
 }
 
+int is_str_term(char c) {
+  return c == '"';
+}
+
+char *read_value(FILE *fp, int (*term)(char)) {
+  int c, len = 0;
+  char buffer[BUFFER_SIZE];
+
+  while (!term(c = fgetc(fp)) && len < BUFFER_SIZE - 1) {
+    buffer[len] = c;
+    len++;
+  }
+  buffer[len] = '\0';
+  
+  char *value = malloc((len + 1) * sizeof(char));
+  strcpy(value, buffer);
+  return value;
+}
+
 // Recursively parse an s-expression from a file stream
-struct SNode *parse_sexpr_file(FILE *fp) {
+struct SNode *snode_parse(FILE *fp) {
   // Using a linked list, nodes are appended to the list tail until we 
   // reach a list terminator at which point we return the list head.
   struct SNode *tail, *head = NULL;
@@ -38,38 +57,20 @@ struct SNode *parse_sexpr_file(FILE *fp) {
       break;
     } else if (c == '(') {
       // Begin list recursion
-      node = calloc(1, sizeof(struct SNode));
+      node = malloc(sizeof(struct SNode));
       node->type = LIST;
-      node->list = parse_sexpr_file(fp);
+      node->list = snode_parse(fp);
     } else if (c == '"') {
-      int length = 0;
-      char buffer[BUFFER_SIZE];
-
-      // Read until string terminator
-      while ((c = fgetc(fp)) != '"' && length < BUFFER_SIZE - 1) {
-        buffer[length] = c;
-        length++;
-      }
-      buffer[length] = '\0';
-
-      node = calloc(1, sizeof(struct SNode));
+      // Read a string
+      node = malloc(sizeof(struct SNode));
       node->type = STRING;
-      node->value = calloc(length + 1, sizeof(char));
-      strcpy(node->value, buffer);
+      node->value = read_value(fp, &is_str_term);
     } else if (!isspace(c)) {
-      int length = 1;
-      char buffer[BUFFER_SIZE] = { c };
-
-      // Read until whitespace or list terminator
-      while (!is_terminator(c = fgetc(fp)) && length < BUFFER_SIZE - 1) {
-        buffer[length] = c;
-        length++;
-      }
-      buffer[length] = '\0';
-
-      node = calloc(1, sizeof(struct SNode));
-      node->value = calloc(length + 1, sizeof(char));
-      strcpy(node->value, buffer);
+      // Read a float, integer, or symbol
+      ungetc(c, fp);
+      
+      node = malloc(sizeof(struct SNode));
+      node->value = read_value(fp, &is_lst_term);
 
       if (is_integer(node->value)) {
         node->type = INTEGER;
@@ -81,6 +82,9 @@ struct SNode *parse_sexpr_file(FILE *fp) {
     }
 
     if (node != NULL) {
+      // Terminate the node
+      node->next = NULL;
+      
       if (head == NULL) {
         // Initialize the list head
         head = tail = node;
