@@ -1,5 +1,5 @@
 language: c
-
 compiler: gcc
 
-script: mkdir bin && make && ./bin/main
+script: 
+  - mkdir bin && make && ./bin/main
