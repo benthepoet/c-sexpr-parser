@@ -5,7 +5,7 @@
 
 #include "sexpr.h"
 
-#define BUFFER_SIZE 512
+#define BUFFER_MAX 512
 
 inline int is_float(char *str) {
   char *ptr = NULL;
@@ -29,9 +29,9 @@ int is_str_term(char c) {
 
 char *read_value(FILE *fp, int (*term)(char)) {
   int c, len = 0;
-  char buffer[BUFFER_SIZE];
+  char buffer[BUFFER_MAX + 1];
 
-  while (!term(c = fgetc(fp)) && len < BUFFER_SIZE - 1) {
+  while (!term(c = fgetc(fp)) && len < BUFFER_MAX) {
     buffer[len] = c;
     len++;
   }
