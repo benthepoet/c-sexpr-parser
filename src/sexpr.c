@@ -7,19 +7,19 @@
 
 #define BUFFER_SIZE 512
 
-int is_float(char *str) {
+inline int is_float(char *str) {
   char *ptr = NULL;
   strtod(str, &ptr);
   return !*ptr;
 }
 
-int is_integer(char *str) {
+inline int is_integer(char *str) {
   char *ptr = NULL;
   strtol(str, &ptr, 10);
   return !*ptr;
 }
 
-int is_terminator(char c) {
+inline int is_terminator(char c) {
   return isspace(c) || c == '(' || c == ')';
 }
 
