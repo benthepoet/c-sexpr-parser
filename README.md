@@ -13,8 +13,8 @@ The supported datatypes are as follows.
 * INTEGER: `-123` `456`
 * FLOAT: `-0.123` `4.567` 
 
-## Getting Started
-To run the example application, which reads an s-expression from a file and then verifies the data run the following.
+## Running tests
+The s-expression used for testing is located at `test/data.lisp`. To execute the tests run the following commands.
 
 ```bash
 mkdir bin

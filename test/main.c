@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
   // Close the file stream
   fclose(fp);
 
-  // Walk the tree and verify data
+  // Run tests
   run_tests(node);
 
   // Deallocate the memory used by the tree
