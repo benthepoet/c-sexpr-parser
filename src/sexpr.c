@@ -19,15 +19,15 @@ inline int is_integer(char *str) {
   return !*ptr;
 }
 
-int is_lst_term(char c) {
-  return isspace(c) || c == '(' || c == ')';
+int is_lst_term(int c) {
+  return c == EOF || isspace(c) || c == '(' || c == ')';
 }
 
-int is_str_term(char c) {
-  return c == '"';
+int is_str_term(int c) {
+  return c == EOF || c == '"';
 }
 
-char *read_value(FILE *fp, int (*is_term)(char)) {
+char *read_value(FILE *fp, int (*is_term)(int)) {
   int c, len = 0;
   char buffer[BUFFER_MAX + 1];
 
