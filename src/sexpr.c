@@ -7,13 +7,13 @@
 
 #define BUFFER_MAX 512
 
-inline int is_float(char *str) {
+int is_float(char *str) {
   char *ptr = NULL;
   strtod(str, &ptr);
   return !*ptr;
 }
 
-inline int is_integer(char *str) {
+int is_integer(char *str) {
   char *ptr = NULL;
   strtol(str, &ptr, 10);
   return !*ptr;
@@ -27,12 +27,12 @@ int is_str_term(int c) {
   return c == EOF || c == '"';
 }
 
-char *read_value(FILE *fp, int (*is_term)(int)) {
-  int c, len = 0;
+char *read_value(FILE *fp, int *c, int (*is_term)(int)) {
+  int len = 0;
   char buffer[BUFFER_MAX + 1];
 
-  while (!is_term(c = fgetc(fp)) && len < BUFFER_MAX) {
-    buffer[len] = c;
+  while (!is_term(*c = fgetc(fp)) && len < BUFFER_MAX) {
+    buffer[len] = *c;
     len++;
   }
   buffer[len] = '\0';
@@ -63,13 +63,16 @@ struct SNode *snode_parse(FILE *fp) {
       // Read a string
       node = malloc(sizeof(struct SNode));
       node->type = STRING;
-      node->value = read_value(fp, &is_str_term);
+      node->value = read_value(fp, &c, &is_str_term);
     } else if (!isspace(c)) {
       // Read a float, integer, or symbol
       ungetc(c, fp);
       
       node = malloc(sizeof(struct SNode));
-      node->value = read_value(fp, &is_lst_term);
+      node->value = read_value(fp, &c, &is_lst_term);
+
+      // Put the terminator back
+      ungetc(c, fp);
 
       if (is_integer(node->value)) {
         node->type = INTEGER;
