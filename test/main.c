@@ -55,26 +55,31 @@ void run_tests(struct SNode *node) {
   assert(!strcmp(current->value, "def-hij"));
   
   printf("List - Child\n");
-  current = current->next;
-  assert(current->type == LIST);
+  struct SNode *child = current->next;
+  assert(child->type == LIST);
   
   printf("Integer - Negative\n");
-  current = current->list;
-  assert(current->type == INTEGER);
-  assert(!strcmp(current->value, "-123"));
+  child = child->list;
+  assert(child->type == INTEGER);
+  assert(!strcmp(child->value, "-123"));
   
   printf("Integer - Positive\n");
-  current = current->next;
-  assert(current->type == INTEGER);
-  assert(!strcmp(current->value, "123"));
+  child = child->next;
+  assert(child->type == INTEGER);
+  assert(!strcmp(child->value, "123"));
   
   printf("Float - Negative\n");
-  current = current->next;
-  assert(current->type == FLOAT);
-  assert(!strcmp(current->value, "-1.234"));
+  child = child->next;
+  assert(child->type == FLOAT);
+  assert(!strcmp(child->value, "-1.234"));
   
   printf("Float - Positive\n");
-  current = current->next;
-  assert(current->type == FLOAT);
-  assert(!strcmp(current->value, "1.234"));
+  child = child->next;
+  assert(child->type == FLOAT);
+  assert(!strcmp(child->value, "1.234"));
+
+  printf("Symbol - Keyword\n");
+  current = current->next->next;
+  assert(current->type == SYMBOL);
+  assert(!strcmp(current->value, ":cba"));
 }
